@@ -10,15 +10,33 @@ import {
   getAllSessions,
 } from "../controllers/game.controller.js";
 import { verifyToken } from "../middlewares/verifyToken.js";
+import { validateRequest } from "../middlewares/validate.js";
+import {
+  createSessionSchema,
+  joinSessionSchema,
+  startSessionSchema,
+  submitGuessSchema,
+  leaveSessionSchema,
+} from "../validation/game.validation.js";
 
 const router = express.Router();
 
-// Protected routes
+// Protected routes with validation
 router.post("/create", verifyToken, createSession);
 router.post("/join", verifyToken, joinSession);
 router.post("/start", verifyToken, startSession);
-router.post("/guess", verifyToken, submitGuess);
-router.post("/leave", verifyToken, leaveSession);
+router.post(
+  "/guess",
+  verifyToken,
+  validateRequest(submitGuessSchema),
+  submitGuess
+);
+router.post(
+  "/leave",
+  verifyToken,
+  validateRequest(leaveSessionSchema),
+  leaveSession
+);
 router.get("/:code", verifyToken, getSession);
 
 // Public route for lobby

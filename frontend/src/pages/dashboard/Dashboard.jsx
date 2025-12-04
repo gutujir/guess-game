@@ -37,69 +37,100 @@ const Dashboard = () => {
 
   if (loading) {
     return (
-      <div className="max-w-xl mx-auto py-8 text-center">
-        <span className="text-gray-500">Loading dashboard...</span>
+      <div className="min-h-[calc(100vh-80px)] flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-violet-500"></div>
       </div>
     );
   }
 
   return (
-    <div className="max-w-xl mx-auto py-10">
-      <h1 className="text-3xl font-bold mb-6 text-green-700 text-center">
-        Dashboard
+    <div className="max-w-4xl mx-auto px-4 py-8">
+      <h1 className="text-4xl font-bold mb-8 text-center text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-fuchsia-400">
+        Player Dashboard
       </h1>
-      <div className="bg-white rounded-lg shadow p-6 mb-8 flex flex-col items-center w-full">
-        <div className="w-24 h-24 rounded-full bg-green-100 flex items-center justify-center text-4xl font-bold text-green-700 mb-2">
-          {user?.username?.[0]?.toUpperCase() ||
-            user?.email?.[0]?.toUpperCase() ||
-            "U"}
-        </div>
-        <div className="text-lg font-semibold mb-1">
-          {user?.username || "Unknown User"}
-        </div>
-        <div className="text-gray-500 mb-2">{user?.email}</div>
-        <div className="grid grid-cols-2 gap-2 w-full max-w-md mb-4 mt-2">
-          <div className="text-sm text-gray-600 font-medium">Full Name:</div>
-          <div className="text-sm text-gray-900">
-            {user?.first_name || "-"} {user?.last_name || ""}
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        {/* Profile Card */}
+        <div className="glass-card p-6 md:col-span-1 flex flex-col items-center text-center">
+          <div className="w-24 h-24 rounded-full bg-gradient-to-br from-violet-500 to-fuchsia-500 flex items-center justify-center text-4xl font-bold text-white mb-4 shadow-lg ring-4 ring-white/10">
+            {user?.username?.[0]?.toUpperCase() || "U"}
           </div>
-          <div className="text-sm text-gray-600 font-medium">Username:</div>
-          <div className="text-sm text-gray-900">{user?.username || "-"}</div>
-          <div className="text-sm text-gray-600 font-medium">User ID:</div>
-          <div className="text-sm text-gray-900 break-all">
-            {user?._id || user?.id || "-"}
+          <h2 className="text-xl font-bold text-white mb-1">
+            {user?.username}
+          </h2>
+          <p className="text-slate-400 text-sm mb-4">{user?.email}</p>
+
+          <div className="w-full border-t border-slate-700/50 pt-4 mt-2">
+            <div className="flex justify-between text-sm mb-2">
+              <span className="text-slate-400">Full Name</span>
+              <span className="text-slate-200">
+                {user?.first_name} {user?.last_name}
+              </span>
+            </div>
+            <div className="flex justify-between text-sm">
+              <span className="text-slate-400">Member Since</span>
+              <span className="text-slate-200">
+                {user?.createdAt
+                  ? new Date(user.createdAt).toLocaleDateString()
+                  : "-"}
+              </span>
+            </div>
           </div>
-          <div className="text-sm text-gray-600 font-medium">Email:</div>
-          <div className="text-sm text-gray-900">{user?.email || "-"}</div>
         </div>
-        <div className="flex gap-4 mt-2">
-          <div className="text-center">
-            <div className="text-xl font-bold text-green-700">
+
+        {/* Stats Cards */}
+        <div className="md:col-span-2 grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="glass-card p-6 flex flex-col items-center justify-center hover:bg-slate-800/70 transition-colors">
+            <div className="text-4xl font-bold text-violet-400 mb-2">
               {stats?.gamesPlayed ?? 0}
             </div>
-            <div className="text-gray-500 text-sm">Games Played</div>
+            <div className="text-slate-400 text-sm uppercase tracking-wider font-semibold">
+              Games Played
+            </div>
           </div>
-          <div className="text-center">
-            <div className="text-xl font-bold text-green-700">
+
+          <div className="glass-card p-6 flex flex-col items-center justify-center hover:bg-slate-800/70 transition-colors">
+            <div className="text-4xl font-bold text-emerald-400 mb-2">
               {stats?.gamesWon ?? 0}
             </div>
-            <div className="text-gray-500 text-sm">Games Won</div>
+            <div className="text-slate-400 text-sm uppercase tracking-wider font-semibold">
+              Games Won
+            </div>
           </div>
-          <div className="text-center">
-            <div className="text-xl font-bold text-green-700">
+
+          <div className="glass-card p-6 flex flex-col items-center justify-center hover:bg-slate-800/70 transition-colors">
+            <div className="text-4xl font-bold text-amber-400 mb-2">
               {stats?.totalGuesses ?? 0}
             </div>
-            <div className="text-gray-500 text-sm">Total Guesses</div>
+            <div className="text-slate-400 text-sm uppercase tracking-wider font-semibold">
+              Total Guesses
+            </div>
+          </div>
+
+          {/* Recent Activity or CTA */}
+          <div className="glass-card p-6 sm:col-span-3 flex flex-col sm:flex-row items-center justify-between gap-4 mt-2">
+            <div>
+              <h3 className="text-lg font-bold text-white">Ready to play?</h3>
+              <p className="text-slate-400 text-sm">
+                Join a session or create your own game.
+              </p>
+            </div>
+            <div className="flex gap-3 w-full sm:w-auto">
+              <button
+                onClick={() => navigate("/lobby")}
+                className="btn-primary flex-1 sm:flex-none text-center text-sm py-2"
+              >
+                Find Game
+              </button>
+              <button
+                onClick={() => navigate("/game/create")}
+                className="btn-secondary flex-1 sm:flex-none text-center text-sm py-2"
+              >
+                Create New
+              </button>
+            </div>
           </div>
         </div>
-      </div>
-      <div className="flex justify-center">
-        <button
-          onClick={() => navigate("/lobby")}
-          className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded font-semibold shadow"
-        >
-          Go to Game Lobby
-        </button>
       </div>
     </div>
   );
