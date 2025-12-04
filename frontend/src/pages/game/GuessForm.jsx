@@ -7,17 +7,22 @@ const GuessForm = ({ guess, setGuess, onSubmit, loading, disabled }) => {
         type="text"
         value={guess}
         onChange={(e) => setGuess(e.target.value)}
-        placeholder="Enter your guess"
-        className="flex-1 border rounded px-3 py-2 text-lg"
+        placeholder="Enter your guess..."
+        className="input-field flex-1"
+        disabled={disabled || loading}
+        maxLength={200}
         required
-        disabled={disabled}
       />
       <button
         type="submit"
-        className="bg-green-600 text-white px-4 py-2 rounded-lg font-bold text-lg hover:bg-green-700 transition"
-        disabled={loading || disabled}
+        className={`px-6 py-2 rounded-lg font-bold transition-all shadow-lg ${
+          disabled || !guess.trim()
+            ? "bg-slate-700 text-slate-500 cursor-not-allowed"
+            : "bg-gradient-to-r from-emerald-500 to-teal-500 text-white hover:from-emerald-600 hover:to-teal-600 hover:shadow-emerald-500/20"
+        }`}
+        disabled={disabled || loading || !guess.trim()}
       >
-        {loading ? "Submitting..." : "Submit Guess"}
+        {loading ? "..." : "Guess"}
       </button>
     </form>
   );

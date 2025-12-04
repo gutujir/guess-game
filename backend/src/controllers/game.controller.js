@@ -257,9 +257,9 @@ export const startSession = async (req, res) => {
   try {
     const userId = req.userId;
     const { code, question, answer } = req.body;
-    if (!code?.trim() || !question?.trim() || !answer?.trim()) {
+    if (!code?.trim()) {
       return res.status(400).json({
-        message: "Code, question, and answer are required to start the game",
+        message: "Code is required to start the game",
       });
     }
 
@@ -269,7 +269,34 @@ export const startSession = async (req, res) => {
       return res.status(404).json({ message: "Session not found" });
     }
 
-    if (!isSameId(session.gameMaster, userId)) {
+    // Debug logging
+    console.log("=== START SESSION DEBUG ===");
+    console.log("userId from req:", userId);
+    console.log("typeof userId:", typeof userId);
+    console.log("session.gameMaster:", session.gameMaster);
+    console.log("typeof session.gameMaster:", typeof session.gameMaster);
+    console.log(
+      "toIdString(session.gameMaster):",
+      toIdString(session.gameMaster)
+    );
+    console.log("toIdString(userId):", toIdString(userId));
+    console.log("isSameId result:", isSameId(session.gameMaster, userId));
+    console.log("=== END DEBUG ===");
+
+    // Convert both to strings for reliable comparison
+    const gameMasterId = toIdString(session.gameMaster);
+    const requesterId = toIdString(userId);
+
+    console.log(
+      "Comparing:",
+      gameMasterId,
+      "===",
+      requesterId,
+      ":",
+      gameMasterId === requesterId
+    );
+
+    if (gameMasterId !== requesterId) {
       return res
         .status(403)
         .json({ message: "Only the game master can start the session" });
@@ -299,8 +326,8 @@ export const startSession = async (req, res) => {
     session.players.forEach((playerId) => ensureScoresEntry(session, playerId));
 
     session.status = "in-progress";
-    session.question = question.trim();
-    session.answer = answer.trim();
+    session.question = question;
+    session.answer = answer;
     session.startTime = new Date();
     session.endTime = null;
     session.winner = null;
@@ -383,6 +410,11 @@ export const submitGuess = async (req, res) => {
 
     attempt.attemptsLeft -= 1;
     await session.save();
+
+    // Emit socket update so all players see the attempts decrease in real-time
+    const populated = await populateSession(session);
+    await emitSessionUpdate(populated);
+
     return res.status(200).json({
       message: "Wrong guess",
       attemptsLeft: attempt.attemptsLeft,

@@ -13,8 +13,14 @@ const CreateSessionForm = () => {
   const [success, setSuccess] = useState("");
   const navigate = useNavigate();
 
+  const handleCodeChange = (e) => {
+    const value = e.target.value.toUpperCase();
+    setCode(value);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     setLoading(true);
     setError("");
     setSuccess("");
@@ -32,38 +38,96 @@ const CreateSessionForm = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center bg-gradient-to-br from-green-50 to-amber-50 py-10">
-      <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8">
-        <h1 className="text-2xl font-extrabold text-green-700 mb-6 text-center tracking-tight">
-          Create New Game Session
+    <div className="min-h-[calc(100vh-80px)] flex flex-col items-center justify-center px-4">
+      <div className="glass-card p-8 w-full max-w-md relative overflow-hidden">
+        {/* Decorative glow */}
+        <div className="absolute top-0 right-0 w-32 h-32 bg-violet-500/10 rounded-full blur-2xl -mr-10 -mt-10"></div>
+
+        <h1 className="text-2xl font-bold mb-2 text-center text-white">
+          Create New Session
         </h1>
+        <p className="text-slate-400 text-center mb-8">
+          Start a new game and invite friends
+        </p>
+
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          <label className="font-semibold text-gray-700">Session Code</label>
-          <input
-            type="text"
-            value={code}
-            onChange={(e) => setCode(e.target.value.toUpperCase())}
-            placeholder="Enter a unique code (e.g. ABC123)"
-            className="border rounded px-3 py-2 text-lg"
-            required
-            maxLength={12}
-          />
+          <div>
+            <label className="block mb-2 text-sm font-medium text-slate-300">
+              Session Code
+            </label>
+            <input
+              type="text"
+              value={code}
+              onChange={handleCodeChange}
+              placeholder="Enter a unique code (e.g. ABC123)"
+              className="input-field"
+              required
+            />
+          </div>
+
           <button
             type="submit"
-            className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-bold text-lg shadow transition"
+            className="btn-primary w-full mt-2"
             disabled={loading}
           >
-            {loading ? "Creating..." : "Create Session"}
+            {loading ? (
+              <span className="flex items-center justify-center gap-2">
+                <svg
+                  className="animate-spin h-5 w-5 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
+                </svg>
+                Creating...
+              </span>
+            ) : (
+              "Create Session"
+            )}
           </button>
         </form>
-        {error && <div className="text-red-500 mt-4 text-center">{error}</div>}
-        {success && (
-          <div className="text-green-600 mt-4 text-center">{success}</div>
+
+        {error && (
+          <div className="mt-4 bg-red-500/10 border border-red-500/50 text-red-200 px-4 py-2 rounded-lg text-sm text-center">
+            {error}
+          </div>
         )}
+
+        {success && (
+          <div className="mt-4 bg-emerald-500/10 border border-emerald-500/50 text-emerald-200 px-4 py-2 rounded-lg text-sm text-center">
+            {success}
+          </div>
+        )}
+
         <button
-          className="mt-6 text-amber-600 underline text-center w-full"
+          className="mt-6 text-slate-400 hover:text-white text-sm transition-colors w-full flex items-center justify-center gap-2"
           onClick={() => navigate("/lobby")}
         >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-4 w-4"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fillRule="evenodd"
+              d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"
+              clipRule="evenodd"
+            />
+          </svg>
           Back to Lobby
         </button>
       </div>

@@ -43,67 +43,83 @@ const Navbar = () => {
       : "U";
 
   return (
-    <nav className="bg-white shadow flex items-center px-6 py-3 mb-4">
-      <div className="flex-1">
+    <nav className="sticky top-0 z-50 glass mb-8">
+      <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
         <Link
           to="/"
-          className="text-2xl font-extrabold text-green-700 tracking-tight"
+          className="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-fuchsia-400 tracking-tight hover:opacity-80 transition-opacity"
         >
           Guessing Game
         </Link>
-      </div>
-      <div className="flex gap-4 items-center relative">
-        {isAuthenticated ? (
-          <>
-            <Link
-              to="/dashboard"
-              className="text-gray-700 font-semibold hover:underline"
-            >
-              Dashboard
-            </Link>
-            <Link
-              to="/lobby"
-              className="text-green-700 font-semibold hover:underline"
-            >
-              ExploreGames
-            </Link>
-            <div className="relative" ref={dropdownRef}>
-              <button
-                className="ml-2 w-10 h-10 rounded-full bg-green-200 flex items-center justify-center font-bold text-green-700 text-lg shadow hover:bg-green-300 focus:outline-none"
-                onClick={() => setDropdownOpen((open) => !open)}
-                aria-label="Profile"
-                type="button"
+
+        <div className="flex gap-6 items-center">
+          {isAuthenticated ? (
+            <>
+              <Link
+                to="/dashboard"
+                className={`text-sm font-medium transition-colors ${
+                  location.pathname === "/dashboard"
+                    ? "text-violet-400"
+                    : "text-slate-300 hover:text-white"
+                }`}
               >
-                {profileLetter}
-              </button>
-              {dropdownOpen && (
-                <div className="absolute right-0 mt-2 w-40 bg-white border rounded shadow-lg z-50">
-                  <button
-                    onClick={handleLogout}
-                    className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
-                  >
-                    Logout
-                  </button>
-                </div>
-              )}
+                Dashboard
+              </Link>
+              <Link
+                to="/lobby"
+                className={`text-sm font-medium transition-colors ${
+                  location.pathname === "/lobby"
+                    ? "text-violet-400"
+                    : "text-slate-300 hover:text-white"
+                }`}
+              >
+                Lobby
+              </Link>
+
+              <div className="relative" ref={dropdownRef}>
+                <button
+                  className="w-10 h-10 rounded-full bg-gradient-to-br from-violet-500 to-fuchsia-500 flex items-center justify-center font-bold text-white shadow-lg hover:shadow-violet-500/50 transition-all transform hover:scale-105 focus:outline-none ring-2 ring-white/20"
+                  onClick={() => setDropdownOpen((open) => !open)}
+                  aria-label="Profile"
+                  type="button"
+                >
+                  {profileLetter}
+                </button>
+                {dropdownOpen && (
+                  <div className="absolute right-0 mt-3 w-48 bg-slate-800 border border-slate-700 rounded-xl shadow-2xl py-2 z-50 overflow-hidden">
+                    <div className="px-4 py-2 border-b border-slate-700 mb-1">
+                      <p className="text-xs text-slate-400">Signed in as</p>
+                      <p className="text-sm font-semibold text-white truncate">
+                        {user?.username}
+                      </p>
+                    </div>
+                    <button
+                      onClick={handleLogout}
+                      className="block w-full text-left px-4 py-2 text-sm text-red-400 hover:bg-slate-700/50 transition-colors"
+                    >
+                      Logout
+                    </button>
+                  </div>
+                )}
+              </div>
+            </>
+          ) : (
+            <div className="flex gap-4">
+              <Link
+                to="/login"
+                className="text-slate-300 hover:text-white font-medium transition-colors"
+              >
+                Login
+              </Link>
+              <Link
+                to="/register"
+                className="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-lg font-medium transition-all border border-white/10"
+              >
+                Register
+              </Link>
             </div>
-          </>
-        ) : (
-          <>
-            <Link
-              to="/login"
-              className="text-green-700 font-semibold hover:underline"
-            >
-              Login
-            </Link>
-            <Link
-              to="/register"
-              className="text-amber-700 font-semibold hover:underline"
-            >
-              Register
-            </Link>
-          </>
-        )}
+          )}
+        </div>
       </div>
     </nav>
   );
