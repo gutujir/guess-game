@@ -20,7 +20,7 @@ const Dashboard = () => {
       try {
         const res = await axios.get(
           `${
-            import.meta.env.VITE_API_URL || "http://localhost:4000/api"
+            import.meta.env.VITE_API_BASE || "http://localhost:4000/api"
           }/dashboard`,
           { withCredentials: true }
         );
